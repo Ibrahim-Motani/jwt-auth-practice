@@ -40,7 +40,19 @@ router.post("/register", async (req, res) => {
         username,
         password: hashedPassword,
       });
-      return res.status(201).json({ ...user, status: "success" });
+      const jwtToken = jsonwebtoken.sign(
+        { id: user._id },
+        process.env.JWT_SECRET,
+        { expiresIn: process.env.JWT_EXPIRY }
+      );
+      return res
+        .status(201)
+        .json({
+          email: user.email,
+          username: user.email,
+          token: jwtToken,
+          status: "success",
+        });
     } catch (error) {
       return res
         .status(500)
