@@ -45,14 +45,12 @@ router.post("/register", async (req, res) => {
         process.env.JWT_SECRET,
         { expiresIn: process.env.JWT_EXPIRY }
       );
-      return res
-        .status(201)
-        .json({
-          email: user.email,
-          username: user.email,
-          token: jwtToken,
-          status: "success",
-        });
+      return res.status(201).json({
+        email: user.email,
+        username: user.email,
+        token: jwtToken,
+        status: "success",
+      });
     } catch (error) {
       return res
         .status(500)
@@ -97,7 +95,13 @@ router.post("/login", async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRY }
     );
-    return res.status(200).json({ token: jwtToken, status: "sucess" });
+    res.cookie("auth-token", jwtToken, {
+      httpOnly: true, // Prevent JavaScript access
+      secure: false, // Send only over HTTPS
+      sameSite: "strict", // Ensure same-site cookie
+      maxAge: 3600000, // Cookie expiration time in milliseconds (e.g., 1 hour)
+    });
+    return res.status(200).json({ status: "sucess" });
   }
 });
 
