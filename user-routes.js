@@ -97,7 +97,7 @@ router.post("/login", async (req, res) => {
     );
     res.cookie("auth-token", jwtToken, {
       httpOnly: true, // Prevent JavaScript access
-      secure: false, // Send only over HTTPS
+      secure: true, // Send only over HTTPS
       sameSite: "strict", // Ensure same-site cookie
       maxAge: 3600000, // Cookie expiration time in milliseconds (e.g., 1 hour)
     });
